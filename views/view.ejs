@@ -22,36 +22,48 @@
 <body>
    <h1>Final Conversion Results</h1>
    
-  <!-- Sort the results by profit in descending order -->
-<% const sortedResults = results.sort((a, b) => parseFloat(b.profit) - parseFloat(a.profit)); %>
+   <% if (results.length === 0) { %>
+    <p>No saved results available.</p>
+    <% } else { %>
+        <% results.forEach((item) => { %>
+            <!-- Title for each table -->
+            <h2>Title: <%= item.selectedCurrency %></h2>
+            <!-- Result table -->
+            <table class="tabili result-table">
+                <tr>
+                    <!-- <th>Converted Amount</th> -->
+                    <th>Currency</th>
+                    <th>Converted Results</th>
+                    <th>Converted to NGN</th>
+                    <th>Profit</th>
+                </tr>
+                <% Object.keys(item.results).forEach((currency) => { %>
+                    <!-- Calculate the profit for the current currency -->
+                    <% const profit = parseFloat(item.profit[currency]); %>
+                    <!-- Apply CSS class based on profit -->
+                    <% const profitClass = profit > 0 ? 'green' : profit < 0 ? 'red' : 'yellow'; %>
+                    <tr>
+                        <td><%= currency %></td>
+                        <td><%= item.results[currency] %></td>
+                        <td><%= item.convertedToNairaResults[currency] %></td>
+                        <!-- Apply the CSS class to the profit cell -->
+                        <td class="<%= profitClass %>"><%= profit %></td>
+                    </tr>
+                <% }); %>
+            </table>
+        <% }); %>
+    <% } %>
 
-<!-- Check if there are any saved results -->
-<% if (sortedResults.length === 0) { %>
-  <p>No saved results available.</p>
-<% } else { %>
-  <!-- Iterate through each saved result -->
-  <% sortedResults.forEach((item) => { %>
-    <h1>Title: <%= item.selectedCurrency %></h1>
-    <table class="tabili">
-      <tr>
-        <th>Currency</th>
-        <th>Converted Results</th>
-        <th>Converted to NGN</th>
-        <th>Profit</th>
-      </tr>
-      <!-- Iterate through the currencies in this result -->
-      <% Object.keys(item.results).forEach((currency) => { %>
-        <% const profit = parseFloat(item.profit[currency]); %>
-        <tr>
-          <td><%= currency %></td>
-          <td><%= item.results[currency] %></td>
-          <td><%= item.convertedToNairaResults[currency] %></td>
-          <td class="<%= profit > 0 ? 'green' : profit < 0 ? 'red' : 'yellow' %>"><%= profit %></td>
-        </tr>
-      <% }); %>
-    </table>
-  <% }); %>
-<% } %>
+   <div class="use">
+    <form action="/user/dashboard/clearresults" method="post">
+      <button class="btn1" type="submit">Clear Results</button>
+    </form>
+  </div>
 
+  <br>
+
+  <div>
+    <p class="btn"><a href="/user/dashboard">Return to Dashboard</a></p>
+  </div>
 </body>
 </html>
