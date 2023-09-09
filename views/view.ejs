@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Final Conversion Results</title>
+   <link rel="stylesheet" type="text/css" href="/view.css">
+   <style>
+      .green {
+        color: green;
+      }
+      .yellow {
+        color: yellow;
+      }
+      .red {
+        color: red;
+      }
+      /* Add some spacing between tables */
+      .result-table {
+        margin-top: 20px;
+      }
+   </style>
+</head>
+<body>
+   <h1>Final Conversion Results</h1>
+   
+  <!-- Sort the results by profit in descending order -->
+<% const sortedResults = results.sort((a, b) => parseFloat(b.profit) - parseFloat(a.profit)); %>
+
+<!-- Check if there are any saved results -->
+<% if (sortedResults.length === 0) { %>
+  <p>No saved results available.</p>
+<% } else { %>
+  <!-- Iterate through each saved result -->
+  <% sortedResults.forEach((item) => { %>
+    <h1>Title: <%= item.selectedCurrency %></h1>
+    <table class="tabili">
+      <tr>
+        <th>Currency</th>
+        <th>Converted Results</th>
+        <th>Converted to NGN</th>
+        <th>Profit</th>
+      </tr>
+      <!-- Iterate through the currencies in this result -->
+      <% Object.keys(item.results).forEach((currency) => { %>
+        <% const profit = parseFloat(item.profit[currency]); %>
+        <tr>
+          <td><%= currency %></td>
+          <td><%= item.results[currency] %></td>
+          <td><%= item.convertedToNairaResults[currency] %></td>
+          <td class="<%= profit > 0 ? 'green' : profit < 0 ? 'red' : 'yellow' %>"><%= profit %></td>
+        </tr>
+      <% }); %>
+    </table>
+  <% }); %>
+<% } %>
+
+</body>
+</html>
